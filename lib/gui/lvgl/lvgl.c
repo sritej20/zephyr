@@ -60,13 +60,26 @@ static void lvgl_log(lv_log_level_t level, const char *file, uint32_t line,
 	 * * LOG_LEVEL_INF 3
 	 * * LOG_LEVEL_DBG 4
 	 */
-	uint8_t zephyr_level = LOG_LEVEL_DBG - level;
+	char *dupdsc = log_strdup(dsc);
 
 	ARG_UNUSED(file);
 	ARG_UNUSED(line);
 	ARG_UNUSED(func);
 
-	Z_LOG(zephyr_level, "%s", log_strdup(dsc));
+	switch (level) {
+	case LV_LOG_LEVEL_TRACE:
+		Z_LOG(LOG_LEVEL_DBG, "%s", dupdsc);
+		break;
+	case LV_LOG_LEVEL_INFO:
+		Z_LOG(LOG_LEVEL_INF, "%s", dupdsc);
+		break;
+	case LV_LOG_LEVEL_WARN:
+		Z_LOG(LOG_LEVEL_WRN, "%s", dupdsc);
+		break;
+	case LV_LOG_LEVEL_ERROR:
+		Z_LOG(LOG_LEVEL_ERR, "%s", dupdsc);
+		break;
+	}
 }
 #endif
 
@@ -206,9 +219,11 @@ static bool lvgl_pointer_kscan_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
 		.state = LV_INDEV_STATE_REL,
 	};
 
-	if (k_msgq_get(&kscan_msgq, &curr, K_NO_WAIT) == 0) {
-		prev = curr;
+	if (k_msgq_get(&kscan_msgq, &curr, K_NO_WAIT) != 0) {
+		goto set_and_release;
 	}
+
+	prev = curr;
 
 	disp = lv_disp_get_default();
 	disp_dev = disp->driver.user_data;
@@ -260,6 +275,7 @@ static bool lvgl_pointer_kscan_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
 		prev.point.y = x;
 	}
 
+set_and_release:
 	*data = prev;
 
 	return k_msgq_num_used_get(&kscan_msgq) > 0;

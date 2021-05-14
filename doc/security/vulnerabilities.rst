@@ -6,7 +6,7 @@ Vulnerabilities
 This page collects all of the vulnerabilities that are discovered and
 fixed in each release.  It will also often have more details than is
 available in the releases.  Some vulnerabilities are deemed to be
-sensitive, and will not be publically discussed until there is
+sensitive, and will not be publicly discussed until there is
 sufficient time to fix them.  Because the release notes are locked to
 a version, the information here can be updated after the embargo is
 lifted.
@@ -51,7 +51,7 @@ CVE-2017-14202
 --------------
 
 The shell implementation does not protect against buffer overruns
-resulting in unpredicable behavior.
+resulting in unpredictable behavior.
 
 Improper Restriction of Operations within the Bounds of a Memory
 Buffer vulnerability in the shell component of Zephyr allows a serial
@@ -635,6 +635,15 @@ descriptor.
 - `PR25804 fix for v2.4
   <https://github.com/zephyrproject-rtos/zephyr/pull/25804>`_
 
+CVE-2020-10136
+-------------------
+
+IP-in-IP protocol routes arbitrary traffic by default zephyrproject
+
+- `CVE-2020-10136 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-10136>`_
+
+- `Zephyr project bug tracker ZEPSEC-64
+  <https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-64>`_
 
 CVE-2020-13598
 --------------
@@ -670,10 +679,32 @@ app keys from the device.
 - `PR26083 fix for v2.4
   <https://github.com/zephyrproject-rtos/zephyr/pull/26083>`_
 
+CVE-2020-13600
+-------------------
+
+Malformed SPI in response for eswifi can corrupt kernel memory
+
+
+- `CVE-2020-13600 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-13600>`_
+
+- `Zephyr project bug tracker ZEPSEC-91
+  <https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-91>`_
+
+- `PR26712 fix for v2.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/26712>`_
+
 CVE-2020-13601
 --------------
 
-Under embargo until 2020/11/18
+Possible read out of bounds in dns read
+
+- `CVE-2020-13601 <https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-13601>`_
+
+- `Zephyr project bug tracker ZEPSEC-92
+  <https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-92>`_
+
+- `PR27774 fix for v2.4
+  <https://github.com/zephyrproject-rtos/zephyr/pull/27774>`_
 
 CVE-2020-13602
 --------------
@@ -690,3 +721,22 @@ infinite loop, resulting in a denial of service attack.
 
 - `PR26571 fix for v2.4
   <https://github.com/zephyrproject-rtos/zephyr/pull/26571>`_
+
+
+CVE-2021
+========
+
+CVE-2021-3320
+-------------------
+
+Under embargo until 2021-04-14
+
+CVE-2021-3321
+-------------------
+
+Under embargo until 2021-04-14
+
+CVE-2021-3323
+-------------------
+
+Under embargo until 2021-04-14

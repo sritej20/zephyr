@@ -107,6 +107,8 @@ The Zephyr nucleo_f429zi board configuration supports the following hardware fea
 +-----------+------------+-------------------------------------+
 | ADC       | on-chip    | adc                                 |
 +-----------+------------+-------------------------------------+
+| DAC       | on-chip    | DAC Controller                      |
++-----------+------------+-------------------------------------+
 
 Other hardware features are not yet supported on this Zephyr port.
 
@@ -189,7 +191,7 @@ Flash partitions for MCUBoot bootloader
 ***************************************
 
 The on-board STM32F429ZI MCU has 2MBs of internal flash memory. To use `MCUboot`_,
-define a :ref:`Zephyr partition table <legacy_flash_partitions>` for the flash memory in
+define a :ref:`Zephyr partition table <flash_map_api>` for the flash memory in
 its devicetree file ``nucleo_f429zi.dts``. As a reference, a partition table for
 MCUBoot is already defined in the devicetree file, with these settings:
 

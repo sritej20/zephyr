@@ -546,7 +546,7 @@ static int cdc_acm_init(const struct device *dev)
 	LOG_DBG("Device dev %p dev_data %p cfg %p added to devlist %p",
 		dev, dev_data, dev->config, &cdc_acm_data_devlist);
 
-	k_sem_init(&dev_data->poll_wait_sem, 0, UINT_MAX);
+	k_sem_init(&dev_data->poll_wait_sem, 0, K_SEM_MAX_LIMIT);
 	k_work_init(&dev_data->cb_work, cdc_acm_irq_callback_work_handler);
 	k_work_init(&dev_data->tx_work, tx_work_handler);
 
@@ -1106,9 +1106,10 @@ static const struct uart_driver_api cdc_acm_driver_api = {
 	};
 
 #define DEFINE_CDC_ACM_DEVICE(x, _)					\
-	DEVICE_AND_API_INIT(cdc_acm_##x,				\
+	DEVICE_DEFINE(cdc_acm_##x,					\
 			    CONFIG_USB_CDC_ACM_DEVICE_NAME "_" #x,	\
-			    &cdc_acm_init, &cdc_acm_dev_data_##x,	\
+			    &cdc_acm_init, NULL,			\
+			    &cdc_acm_dev_data_##x,			\
 			    &cdc_acm_config_##x,			\
 			    POST_KERNEL,				\
 			    CONFIG_KERNEL_INIT_PRIORITY_DEVICE,		\

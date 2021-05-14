@@ -61,7 +61,7 @@
 	SECTION_PROLOGUE(struct_type##_area,,SUBALIGN(subalign)) \
 	{ \
 		Z_LINK_ITERABLE(struct_type); \
-	} GROUP_LINK_IN(ROMABLE_REGION)
+	} GROUP_ROM_LINK_IN(RAMABLE_REGION, ROMABLE_REGION)
 
 /* Define an output section which will set up an iterable area
  * of equally-sized data structures. For use with Z_STRUCT_SECTION_ITERABLE.
@@ -116,15 +116,13 @@
  */
 #define CREATE_OBJ_LEVEL(object, level)				\
 		__##object##_##level##_start = .;		\
-		KEEP(*(SORT(.object##_##level[0-9]*)));		\
-		KEEP(*(SORT(.object##_##level[1-9][0-9]*)));
+		KEEP(*(SORT(.z_##object##_##level[0-9]_*)));		\
+		KEEP(*(SORT(.z_##object##_##level[1-9][0-9]_*)));
 
 /*
  * link in shell initialization objects for all modules that use shell and
  * their shell commands are automatically initialized by the kernel.
  */
-
-#define APP_SMEM_SECTION() KEEP(*(SORT("data_smem_*")))
 
 #elif defined(_ASMLANGUAGE)
 
@@ -182,6 +180,12 @@ extern char __data_ram_start[];
 extern char __data_ram_end[];
 #endif /* CONFIG_XIP */
 
+#ifdef CONFIG_MMU
+/* Virtual addresses of page-aligned kernel image mapped into RAM at boot */
+extern char z_mapped_start[];
+extern char z_mapped_end[];
+#endif /* CONFIG_MMU */
+
 /* Includes text and rodata */
 extern char _image_rom_start[];
 extern char _image_rom_end[];
@@ -228,6 +232,13 @@ extern char __ccm_bss_end[];
 extern char __ccm_noinit_start[];
 extern char __ccm_noinit_end[];
 extern char __ccm_end[];
+#endif
+
+#if DT_NODE_HAS_STATUS(DT_CHOSEN(zephyr_itcm), okay)
+extern char __itcm_start[];
+extern char __itcm_end[];
+extern char __itcm_size[];
+extern char __itcm_rom_start[];
 #endif
 
 #if DT_NODE_HAS_STATUS(DT_CHOSEN(zephyr_dtcm), okay)
@@ -289,7 +300,72 @@ extern char z_priv_stacks_ram_start[];
 extern char z_priv_stacks_ram_end[];
 extern char z_user_stacks_start[];
 extern char z_user_stacks_end[];
+extern char z_kobject_data_begin[];
 #endif /* CONFIG_USERSPACE */
+
+#ifdef CONFIG_THREAD_LOCAL_STORAGE
+extern char __tdata_start[];
+extern char __tdata_end[];
+extern char __tdata_size[];
+extern char __tdata_align[];
+extern char __tbss_start[];
+extern char __tbss_end[];
+extern char __tbss_size[];
+extern char __tbss_align[];
+extern char __tls_start[];
+extern char __tls_end[];
+extern char __tls_size[];
+#endif /* CONFIG_THREAD_LOCAL_STORAGE */
+
+#ifdef CONFIG_LINKER_USE_BOOT_SECTION
+/* lnkr_boot_start[] and lnkr_boot_end[]
+ * must encapsulate all the boot sections.
+ */
+extern char lnkr_boot_start[];
+extern char lnkr_boot_end[];
+
+extern char lnkr_boot_text_start[];
+extern char lnkr_boot_text_end[];
+extern char lnkr_boot_text_size[];
+extern char lnkr_boot_data_start[];
+extern char lnkr_boot_data_end[];
+extern char lnkr_boot_data_size[];
+extern char lnkr_boot_rodata_start[];
+extern char lnkr_boot_rodata_end[];
+extern char lnkr_boot_rodata_size[];
+extern char lnkr_boot_bss_start[];
+extern char lnkr_boot_bss_end[];
+extern char lnkr_boot_bss_size[];
+extern char lnkr_boot_noinit_start[];
+extern char lnkr_boot_noinit_end[];
+extern char lnkr_boot_noinit_size[];
+#endif /* CONFIG_LINKER_USE_BOOT_SECTION */
+
+#ifdef CONFIG_LINKER_USE_PINNED_SECTION
+/* lnkr_pinned_start[] and lnkr_pinned_end[] must encapsulate
+ * all the pinned sections as these are used by
+ * the MMU code to mark the physical page frames with
+ * Z_PAGE_FRAME_PINNED.
+ */
+extern char lnkr_pinned_start[];
+extern char lnkr_pinned_end[];
+
+extern char lnkr_pinned_text_start[];
+extern char lnkr_pinned_text_end[];
+extern char lnkr_pinned_text_size[];
+extern char lnkr_pinned_data_start[];
+extern char lnkr_pinned_data_end[];
+extern char lnkr_pinned_data_size[];
+extern char lnkr_pinned_rodata_start[];
+extern char lnkr_pinned_rodata_end[];
+extern char lnkr_pinned_rodata_size[];
+extern char lnkr_pinned_bss_start[];
+extern char lnkr_pinned_bss_end[];
+extern char lnkr_pinned_bss_size[];
+extern char lnkr_pinned_noinit_start[];
+extern char lnkr_pinned_noinit_end[];
+extern char lnkr_pinned_noinit_size[];
+#endif /* CONFIG_LINKER_USE_PINNED_SECTION */
 
 #endif /* ! _ASMLANGUAGE */
 
